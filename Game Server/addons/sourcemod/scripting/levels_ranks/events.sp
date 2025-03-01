@@ -15,6 +15,7 @@ void HookEvents()
 	HookEvent("hostage_rescued", Events_Hostage, EventHookMode_Pre);
 	HookEvent("round_start", Events_Rounds, EventHookMode_Pre);
 	HookEvent("round_end", Events_Rounds, EventHookMode_Pre);
+	HookEvent("player_spawn", Events_Spawn, EventHookMode_Post);
 	HookEventEx("round_mvp", Events_Rounds, EventHookMode_Pre);	// Missing in CS:S v34.
 }
 
@@ -277,6 +278,10 @@ void Events_Rounds(Event hEvent, const char[] sName, bool bDontBroadcast)
 	{
 		NotifClient(GetClientOfUserId(hEvent.GetInt("userid")), g_SettingsStats[LR_ExpRoundMVP], "RoundMVP");
 	}
+}
+
+void Events_Spawn(Event hEvent, const char[] sName, bool bDontBroadcast) {
+	UpdateRankTag(hEvent.GetInt("userid"));
 }
 
 void GiveExpForStreakKills(int iClient)
