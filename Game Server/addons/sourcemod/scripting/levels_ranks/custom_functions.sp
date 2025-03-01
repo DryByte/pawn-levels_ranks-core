@@ -276,12 +276,19 @@ bool CheckStatus(int iClient)
 	return (iClient && IsClientAuthorized(iClient) && !IsFakeClient(iClient) && g_iPlayerInfo[iClient].bInitialized) || (g_iPlayerInfo[iClient].bInitialized = false);
 }
 
-void UpdateRankTag(int iClient) {
-	if (CheckStatus(iClient)) {
-		char outBuf[192];
-		g_hRankNames.GetString(g_iPlayerInfo[iClient].iStats[ST_RANK]-1, outBuf, sizeof(outBuf));
+void UpdateRankTag(int userId) {
+	int iClient = GetClientOfUserId(userId);
 
-		char transRank[192];
+	char outBuf[192], transRank[192];
+
+	if (CheckStatus(iClient)) {
+		g_hRankNames.GetString(g_iPlayerInfo[iClient].iStats[ST_RANK]-1, outBuf, sizeof(outBuf));
+		Format(transRank, sizeof(transRank), "%T", outBuf, iClient);
+
+		CS_SetClientClanTag(iClient, transRank);
+
+	} else if (IsClientAuthorized(iClient) && IsFakeClient(iClient)) {
+		g_hRankNames.GetString(0, outBuf, sizeof(outBuf));
 		Format(transRank, sizeof(transRank), "%T", outBuf, iClient);
 
 		CS_SetClientClanTag(iClient, transRank);
@@ -361,7 +368,7 @@ void CheckRank(int iClient, bool bActive = true)
 					}
 				}
 
-				UpdateRankTag(iClient);
+				UpdateRankTag(GetClientUserId(iClient));
 				CallForward_OnLevelChanged(iClient, iRank, iOldRank, false);
 			}
 		}

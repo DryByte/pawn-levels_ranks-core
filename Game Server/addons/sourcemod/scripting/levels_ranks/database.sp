@@ -210,6 +210,12 @@ void OnCleanDB()
 	}
 }
 
+// For some reason when IsClientInGame returns false, CS_SetClientClanTag fails as well...
+// So UpdateRankTag will be called when we are sure the client connected already.
+public void OnClientPutInServer(int iClient) {
+	UpdateRankTag(GetClientUserId(iClient));
+}
+
 public void OnClientAuthorized(int iClient, const char[] sAuth)
 {
 	if(g_hDatabase)
@@ -343,6 +349,9 @@ public void SQL_Callback(Database hDatabase, DBResultSet hResult, const char[] s
 
 						CheckRank(iClient, false);
 
+						if (IsClientInGame(iClient))
+							UpdateRankTag(GetClientUserId(iClient));
+
 						CallForward_OnPlayerLoaded(iClient);
 					}
 				}
@@ -360,6 +369,9 @@ public void SQL_Callback(Database hDatabase, DBResultSet hResult, const char[] s
 
 							g_iPlayerInfo[iClient].iStats[ST_PLAYTIME] += g_iPlayerInfo[iClient].iSessionStats[ST_PLAYTIME] -= GetTime();
 							g_iPlayerInfo[iClient].bInitialized = true;
+
+							if (IsClientInGame(iClient))
+								UpdateRankTag(GetClientUserId(iClient));
 
 							CallForward_OnPlayerLoaded(iClient);
 						}
