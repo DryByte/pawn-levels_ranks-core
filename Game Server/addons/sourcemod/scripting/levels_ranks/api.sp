@@ -72,26 +72,26 @@ int Native_GetVersion(Handle hPlugin, int iArgs)
 
 int Native_Hook(Handle hPlugin, int iArgs)
 {
-	return g_hForward_Hook[GetNativeCell(1)].AddFunction(hPlugin, GetNativeCell(2));
+	return g_hForward_Hook[GetNativeCell(1)].AddFunction(hPlugin, GetNativeFunction(2));
 }
 
 int Native_Unhook(Handle hPlugin, int iArgs)
 {
-	return g_hForward_Hook[GetNativeCell(1)].RemoveFunction(hPlugin, GetNativeCell(2));
+	return g_hForward_Hook[GetNativeCell(1)].RemoveFunction(hPlugin, GetNativeFunction(2));
 }
 
 int Native_MenuHook(Handle hPlugin, int iArgs)
 {
 	int iMenuType = GetNativeCell(1);
 
-	return g_hForward_CreatedMenu[iMenuType].AddFunction(hPlugin, GetNativeCell(2)) && g_hForward_SelectedMenu[iMenuType].AddFunction(hPlugin, GetNativeCell(3));
+	return g_hForward_CreatedMenu[iMenuType].AddFunction(hPlugin, GetNativeFunction(2)) && g_hForward_SelectedMenu[iMenuType].AddFunction(hPlugin, GetNativeFunction(3));
 }
 
 int Native_MenuUnhook(Handle hPlugin, int iArgs)
 {
 	int iMenuType = GetNativeCell(1);
 
-	return g_hForward_CreatedMenu[iMenuType].RemoveFunction(hPlugin, GetNativeCell(2)) && g_hForward_SelectedMenu[iMenuType].RemoveFunction(hPlugin, GetNativeCell(3));
+	return g_hForward_CreatedMenu[iMenuType].RemoveFunction(hPlugin, GetNativeFunction(2)) && g_hForward_SelectedMenu[iMenuType].RemoveFunction(hPlugin, GetNativeFunction(3));
 }
 
 int Native_GetSettingsValue(Handle hPlugin, int iArgs)

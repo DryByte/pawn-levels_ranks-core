@@ -144,7 +144,7 @@ int MenuAdmin_Callback(Menu hMenu, MenuAction mAction, int iClient, int iSlot)
 	}
 }
 
-void GiveTakeValue(int iClient, const char sID[] = NULL_STRING)
+void GiveTakeValue(int iClient, const char[] sID = NULL_STRING)
 {
 	Menu hMenu = new Menu(sID[0] == '\0' ? GiveTakeValue_Callback : ChangeExpPlayers_Callback, MenuAction_Select);
 
