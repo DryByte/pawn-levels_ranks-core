@@ -1,3 +1,5 @@
+#include <cstrike>
+
 void LR_PrintMessage(int iClient, bool bPrefix, bool bNative, const char[] sFormat, any ...)
 {
 	if(iClient && IsClientInGame(iClient) && !IsFakeClient(iClient))
@@ -274,6 +276,18 @@ bool CheckStatus(int iClient)
 	return (iClient && IsClientAuthorized(iClient) && !IsFakeClient(iClient) && g_iPlayerInfo[iClient].bInitialized) || (g_iPlayerInfo[iClient].bInitialized = false);
 }
 
+void UpdateRankTag(int iClient) {
+	if (CheckStatus(iClient)) {
+		char outBuf[192];
+		g_hRankNames.GetString(g_iPlayerInfo[iClient].iStats[ST_RANK]-1, outBuf, sizeof(outBuf));
+
+		char transRank[192];
+		Format(transRank, sizeof(transRank), "%T", outBuf, iClient);
+
+		CS_SetClientClanTag(iClient, transRank);
+	}
+}
+
 void CheckRank(int iClient, bool bActive = true)
 {
 	if(CheckStatus(iClient))
@@ -347,6 +361,7 @@ void CheckRank(int iClient, bool bActive = true)
 					}
 				}
 
+				UpdateRankTag(iClient);
 				CallForward_OnLevelChanged(iClient, iRank, iOldRank, false);
 			}
 		}
